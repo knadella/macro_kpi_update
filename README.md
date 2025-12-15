@@ -46,19 +46,9 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Usage
-
-[Add usage instructions as pipelines are developed]
 
 ## Data Sources
 
 [Add information about data sources as they are integrated]
 
-## Contributing
-
-[Add contribution guidelines]
-
-## License
-
-[Add license information]
 
