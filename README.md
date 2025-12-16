@@ -75,14 +75,12 @@ python pipelines/inflation_pipeline.py --source statcan
 
 Available sources:
 - `statcan` - Statistics Canada (default)
-- `bank_of_canada` - Bank of Canada
-- `fred` - FRED API (requires FRED_API_KEY environment variable)
 
 The pipeline will:
 1. Fetch inflation data from the specified source
 2. Process and standardize the data
 3. Calculate year-over-year inflation rates
-4. Save data in both Parquet and CSV formats to `data/processed/`
+4. Save data in both Parquet and CSV formats to `data/processed/` and `data_outputs`
 
 ### Example
 
@@ -90,12 +88,6 @@ The pipeline will:
 # Use Statistics Canada (default)
 python pipelines/inflation_pipeline.py
 
-# Use Bank of Canada
-python pipelines/inflation_pipeline.py --source bank_of_canada
-
-# Use FRED (requires API key)
-export FRED_API_KEY=your_api_key_here
-python pipelines/inflation_pipeline.py --source fred
 ```
 
 

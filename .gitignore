@@ -37,6 +37,7 @@ env/
 
 # Data files
 data/
+data_outputs/
 *.csv
 *.json
 *.parquet
