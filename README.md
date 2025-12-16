@@ -11,10 +11,16 @@ This project provides data pipelines to collect, transform, and store macroecono
 ```
 macro_kpi_update/
 ├── pipelines/          # Data pipeline scripts
+│   └── inflation_pipeline.py  # Inflation data ingestion pipeline
 ├── data/               # Raw and processed data (gitignored)
+│   └── processed/      # Processed data files
 ├── config/             # Configuration files
+│   └── data_sources.yaml  # Data source configurations
 ├── src/                # Source code and utilities
+│   ├── data_fetcher.py    # Data fetching utilities
+│   └── data_processor.py  # Data processing utilities
 ├── tests/              # Unit and integration tests
+├── logs/               # Pipeline execution logs
 ├── requirements.txt    # Python dependencies
 └── README.md          # This file
 ```
@@ -49,6 +55,47 @@ pip install -r requirements.txt
 
 ## Data Sources
 
-[Add information about data sources as they are integrated]
+### Inflation Data
+
+The inflation pipeline supports multiple data sources:
+
+- **Statistics Canada (StatCan)** - Official Canadian government data (default)
+- **Bank of Canada** - Central bank economic indicators
+- **FRED (Federal Reserve Economic Data)** - International economic data including Canadian CPI
+
+## Usage
+
+### Running the Inflation Pipeline
+
+To ingest inflation data, run:
+
+```bash
+python pipelines/inflation_pipeline.py --source statcan
+```
+
+Available sources:
+- `statcan` - Statistics Canada (default)
+- `bank_of_canada` - Bank of Canada
+- `fred` - FRED API (requires FRED_API_KEY environment variable)
+
+The pipeline will:
+1. Fetch inflation data from the specified source
+2. Process and standardize the data
+3. Calculate year-over-year inflation rates
+4. Save data in both Parquet and CSV formats to `data/processed/`
+
+### Example
+
+```bash
+# Use Statistics Canada (default)
+python pipelines/inflation_pipeline.py
+
+# Use Bank of Canada
+python pipelines/inflation_pipeline.py --source bank_of_canada
+
+# Use FRED (requires API key)
+export FRED_API_KEY=your_api_key_here
+python pipelines/inflation_pipeline.py --source fred
+```
 
 

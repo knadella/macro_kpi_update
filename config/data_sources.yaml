@@ -1,0 +1,36 @@
+# Data Sources Configuration
+# Configuration for various macroeconomic data sources
+
+statcan:
+  name: "Statistics Canada"
+  base_url: "https://www150.statcan.gc.ca/t1/wds/rest"
+  api_version: "v1"
+  endpoints:
+    inflation:
+      table_id: "18100004"  # Consumer Price Index (CPI) - must be 8 digits
+      product_id: "18100004"
+  rate_limit:
+    requests_per_minute: 60
+
+bank_of_canada:
+  name: "Bank of Canada"
+  base_url: "https://www.bankofcanada.ca/valet"
+  endpoints:
+    inflation:
+      series: "CPI_MEDIAN"
+  rate_limit:
+    requests_per_minute: 30
+
+fred:
+  name: "Federal Reserve Economic Data"
+  base_url: "https://api.stlouisfed.org/fred"
+  api_key: null  # Set via environment variable FRED_API_KEY
+  endpoints:
+    inflation:
+      series: "CPALTT01CAM661N"  # Consumer Price Index: Total All Items for Canada
+  rate_limit:
+    requests_per_minute: 120
+
+# Default data source priority
+default_source: "statcan"
+
