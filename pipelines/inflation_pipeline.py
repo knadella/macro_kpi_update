@@ -80,8 +80,8 @@ def main(source: str = "statcan"):
         
         logger.info(f"Processed {len(df)} records")
         
-        # Calculate inflation rates (MoM and YoY)
-        logger.info("Calculating inflation rates (MoM and YoY)...")
+        # Calculate inflation rates (MoM, YoY, and 3-month trend)
+        logger.info("Calculating inflation rates (MoM, YoY, and 3-month trend)...")
         df = processor.calculate_inflation_rates(df)
         
         # Format output with required fields
@@ -91,7 +91,8 @@ def main(source: str = "statcan"):
             'Mnth': df['date'].dt.month,
             'Inflation Value': df['cpi_value'],
             'YoY Value': df['inflation_yoy'],
-            'MoM Value': df['inflation_mom']
+            'MoM Value': df['inflation_mom'],
+            '3 Month Trend': df['trend_3m']
         })
         
         # Save processed data to data/processed (for internal use)

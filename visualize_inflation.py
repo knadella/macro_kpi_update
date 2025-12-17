@@ -131,3 +131,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     visualize_inflation_data(args.file)
 
+

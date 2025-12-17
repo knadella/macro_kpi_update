@@ -171,13 +171,13 @@ class DataProcessor:
     
     def calculate_inflation_rates(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Calculate both month-over-month (MoM) and year-over-year (YoY) inflation rates.
+        Calculate MoM, YoY inflation rates and 3-month trend.
         
         Args:
             df: DataFrame with 'date' and 'cpi_value' columns (must be sorted by date)
             
         Returns:
-            DataFrame with added 'inflation_mom' and 'inflation_yoy' columns
+            DataFrame with added 'inflation_mom', 'inflation_yoy', and 'trend_3m' columns
         """
         df = df.copy()
         df = df.sort_values('date').reset_index(drop=True)
@@ -189,6 +189,9 @@ class DataProcessor:
         # Year-over-year inflation (12 months ago)
         df['cpi_prev_year'] = df['cpi_value'].shift(12)
         df['inflation_yoy'] = ((df['cpi_value'] - df['cpi_prev_year']) / df['cpi_prev_year']) * 100
+        
+        # 3-month trend: rolling average of last 3 YoY values
+        df['trend_3m'] = df['inflation_yoy'].rolling(window=3, min_periods=3).mean()
         
         # Drop intermediate columns
         df = df.drop(columns=['cpi_prev_month', 'cpi_prev_year'])
