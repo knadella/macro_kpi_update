@@ -39,7 +39,9 @@ env/
 data/
 data_outputs/*
 !data_outputs/inflation_data.csv
+!data_outputs/.gitkeep
 *.csv
+!data_outputs/inflation_data.csv
 *.json
 *.parquet
 *.xlsx
