@@ -95,16 +95,15 @@ def main(source: str = "statcan"):
             '3 Month Trend': df['trend_3m']
         })
         
-        # Save processed data to data/processed (for internal use)
+        # Save processed data to data/processed (for internal use with timestamp)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"inflation_data_{source}_{timestamp}"
         processor.save_data(output_df, filename, format='parquet')
         
-        # Save CSV to data_outputs folder
+        # Save CSV to data_outputs folder with fixed filename (overwrites on each run)
         output_dir = Path(__file__).parent.parent / "data_outputs"
         output_dir.mkdir(parents=True, exist_ok=True)
-        csv_filename = f"inflation_data_{source}_{timestamp}.csv"
-        csv_path = output_dir / csv_filename
+        csv_path = output_dir / "inflation_data.csv"
         output_df.to_csv(csv_path, index=False)
         logger.info(f"CSV saved to {csv_path}")
         

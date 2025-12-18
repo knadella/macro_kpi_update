@@ -10,6 +10,8 @@ on:
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push commits
     
     steps:
     - name: Checkout repository
@@ -30,11 +32,20 @@ jobs:
       run: |
         python3 pipelines/inflation_pipeline.py --source statcan
     
+    - name: Commit and push CSV to repository
+      if: success()
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add data_outputs/inflation_data.csv
+        git diff --staged --quiet || git commit -m "Update inflation data [skip ci]"
+        git push
+    
     - name: Upload output CSV
       uses: actions/upload-artifact@v4
       with:
         name: inflation-data-${{ github.run_number }}
-        path: data_outputs/*.csv
+        path: data_outputs/inflation_data.csv
         retention-days: 90
         if-no-files-found: warn
     
@@ -53,8 +64,10 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "✅ Pipeline completed successfully" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Output files:**" >> $GITHUB_STEP_SUMMARY
-        ls -lh data_outputs/*.csv 2>/dev/null | awk '{print "- " $9 " (" $5 ")"}' >> $GITHUB_STEP_SUMMARY || echo "- No CSV files found" >> $GITHUB_STEP_SUMMARY
+        echo "**Output file:**" >> $GITHUB_STEP_SUMMARY
+        ls -lh data_outputs/inflation_data.csv 2>/dev/null | awk '{print "- " $9 " (" $5 ")"}' >> $GITHUB_STEP_SUMMARY || echo "- No CSV file found" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📁 CSV file has been committed to the repository" >> $GITHUB_STEP_SUMMARY
     
     - name: Notify on failure
       if: failure()
@@ -62,5 +75,6 @@ jobs:
         echo "## ❌ Pipeline Failed" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "Check the logs for details." >> $GITHUB_STEP_SUMMARY
+
 
 

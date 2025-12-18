@@ -37,7 +37,8 @@ env/
 
 # Data files
 data/
-data_outputs/
+data_outputs/*
+!data_outputs/inflation_data.csv
 *.csv
 *.json
 *.parquet
