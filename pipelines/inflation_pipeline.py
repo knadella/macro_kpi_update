@@ -16,12 +16,16 @@ from src.data_fetcher import DataFetcher
 from src.data_processor import DataProcessor
 import pandas as pd
 
+# Create logs directory if it doesn't exist
+logs_dir = Path(__file__).parent.parent / "logs"
+logs_dir.mkdir(parents=True, exist_ok=True)
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('logs/inflation_pipeline.log'),
+        logging.FileHandler(logs_dir / 'inflation_pipeline.log'),
         logging.StreamHandler()
     ]
 )
@@ -37,10 +41,6 @@ def main(source: str = "statcan"):
         source: Data source to use ('statcan', 'bank_of_canada', 'fred')
     """
     logger.info(f"Starting inflation data pipeline from source: {source}")
-    
-    # Create logs directory
-    logs_dir = Path(__file__).parent.parent / "logs"
-    logs_dir.mkdir(exist_ok=True)
     
     try:
         # Initialize components
