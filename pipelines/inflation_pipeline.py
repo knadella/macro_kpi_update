@@ -6,9 +6,7 @@ Ingests and processes Canadian inflation data from various sources.
 
 import sys
 from pathlib import Path
-import logging
 from datetime import datetime
-import os
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -26,7 +24,7 @@ def main(source: str = "statcan"):
     Args:
         source: Data source to use ('statcan', 'bank_of_canada', 'fred')
     """
-    logger.info(f"Starting inflation data pipeline from source: {source}")
+    print(f"Starting inflation data pipeline from source: {source}")
     
     try:
         # Initialize components
