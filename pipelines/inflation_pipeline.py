@@ -29,22 +29,6 @@ except Exception as e:
     print(f"Warning: Could not create logs directory: {e}", file=sys.stderr)
     logs_dir = None
 
-# Configure logging
-handlers = [logging.StreamHandler()]
-if logs_dir:
-    try:
-        handlers.append(logging.FileHandler(logs_dir / 'inflation_pipeline.log'))
-    except Exception as e:
-        print(f"Warning: Could not create log file: {e}", file=sys.stderr)
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=handlers
-)
-
-logger = logging.getLogger(__name__)
-
 
 def main(source: str = "statcan"):
     """
@@ -61,7 +45,7 @@ def main(source: str = "statcan"):
         processor = DataProcessor()
         
         # Fetch data
-        logger.info(f"Fetching inflation data from {source}...")
+        #logger.info(f"Fetching inflation data from {source}...")
         
         if source == "statcan":
             config = fetcher.config['statcan']
@@ -81,20 +65,20 @@ def main(source: str = "statcan"):
         else:
             raise ValueError(f"Unknown source: {source}")
         
-        logger.info("Data fetched successfully")
+       # logger.info("Data fetched successfully")
         
         # Process data
-        logger.info("Processing data...")
+        #logger.info("Processing data...")
         df = processor.process_inflation_data(raw_data, source=source)
         
         if df.empty:
-            logger.warning("No data returned from source")
+            #logger.warning("No data returned from source")
             return
         
-        logger.info(f"Processed {len(df)} records")
+        #logger.info(f"Processed {len(df)} records")
         
         # Calculate inflation rates (MoM, YoY, and 3-month trend)
-        logger.info("Calculating inflation rates (MoM, YoY, and 3-month trend)...")
+        #logger.info("Calculating inflation rates (MoM, YoY, and 3-month trend)...")
         df = processor.calculate_inflation_rates(df)
         
         # Format output with required fields
@@ -118,9 +102,9 @@ def main(source: str = "statcan"):
         output_dir.mkdir(parents=True, exist_ok=True)
         csv_path = output_dir / "inflation_data.csv"
         output_df.to_csv(csv_path, index=False)
-        logger.info(f"CSV saved to {csv_path}")
+        #logger.info(f"CSV saved to {csv_path}")
         
-        logger.info("Pipeline completed successfully")
+        #logger.info("Pipeline completed successfully")
         
         # Print summary
         print("\n" + "="*70)
@@ -151,7 +135,7 @@ def main(source: str = "statcan"):
         print("="*70 + "\n")
         
     except Exception as e:
-        logger.error(f"Pipeline failed: {e}", exc_info=True)
+        #logger.error(f"Pipeline failed: {e}", exc_info=True)
         raise
 
 
