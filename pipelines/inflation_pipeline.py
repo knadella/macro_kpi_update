@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 import logging
 from datetime import datetime
+import os
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -25,7 +26,6 @@ try:
         raise OSError(f"Failed to create logs directory: {logs_dir}")
 except Exception as e:
     # If directory creation fails, log to stderr and continue with console logging only
-    import sys
     print(f"Warning: Could not create logs directory: {e}", file=sys.stderr)
     logs_dir = None
 
