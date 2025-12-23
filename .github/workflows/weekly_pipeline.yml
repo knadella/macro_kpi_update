@@ -30,9 +30,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
+    - name: Verify installation
+      run: |
+        python3 -c "import pandas, numpy, requests, yaml; print('All dependencies installed')"
+    
     - name: Run inflation pipeline
       run: |
         python3 pipelines/inflation_pipeline.py --source statcan
+      continue-on-error: false
     
     - name: Commit and push CSV to repository
       if: success()
