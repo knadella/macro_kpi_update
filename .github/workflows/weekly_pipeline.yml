@@ -36,8 +36,11 @@ jobs:
     
     - name: Run inflation pipeline
       run: |
-        python3 pipelines/inflation_pipeline.py --source statcan
-      continue-on-error: false
+        set -e  # Exit on error
+        python3 pipelines/inflation_pipeline.py --source statcan || {
+          echo "Pipeline failed with exit code $?"
+          exit 1
+        }
     
     - name: Commit and push CSV to repository
       if: success()
