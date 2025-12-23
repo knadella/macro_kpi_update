@@ -18,16 +18,29 @@ import pandas as pd
 
 # Create logs directory if it doesn't exist
 logs_dir = Path(__file__).parent.parent / "logs"
-logs_dir.mkdir(parents=True, exist_ok=True)
+try:
+    logs_dir.mkdir(parents=True, exist_ok=True)
+    # Verify directory was created
+    if not logs_dir.exists():
+        raise OSError(f"Failed to create logs directory: {logs_dir}")
+except Exception as e:
+    # If directory creation fails, log to stderr and continue with console logging only
+    import sys
+    print(f"Warning: Could not create logs directory: {e}", file=sys.stderr)
+    logs_dir = None
 
 # Configure logging
+handlers = [logging.StreamHandler()]
+if logs_dir:
+    try:
+        handlers.append(logging.FileHandler(logs_dir / 'inflation_pipeline.log'))
+    except Exception as e:
+        print(f"Warning: Could not create log file: {e}", file=sys.stderr)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler(logs_dir / 'inflation_pipeline.log'),
-        logging.StreamHandler()
-    ]
+    handlers=handlers
 )
 
 logger = logging.getLogger(__name__)
