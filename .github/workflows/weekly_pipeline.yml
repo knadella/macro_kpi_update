@@ -17,7 +17,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0  # Fetch all history for proper diff detection
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -36,9 +36,12 @@ jobs:
     
     - name: Commit and push CSV to repository
       if: success()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
         git add data_outputs/inflation_data.csv
         if git diff --staged --quiet; then
           echo "No changes to commit"
