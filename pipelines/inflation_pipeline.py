@@ -17,17 +17,6 @@ from src.data_fetcher import DataFetcher
 from src.data_processor import DataProcessor
 import pandas as pd
 
-# Create logs directory if it doesn't exist
-logs_dir = Path(__file__).parent.parent / "logs"
-try:
-    logs_dir.mkdir(parents=True, exist_ok=True)
-    # Verify directory was created
-    if not logs_dir.exists():
-        raise OSError(f"Failed to create logs directory: {logs_dir}")
-except Exception as e:
-    # If directory creation fails, log to stderr and continue with console logging only
-    print(f"Warning: Could not create logs directory: {e}", file=sys.stderr)
-    logs_dir = None
 
 
 def main(source: str = "statcan"):
