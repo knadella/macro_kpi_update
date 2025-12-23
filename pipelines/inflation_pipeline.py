@@ -87,17 +87,20 @@ def main(source: str = "statcan"):
             '3 Month Trend': df['trend_3m']
         })
         
-        # Save processed data to data/processed (for internal use with timestamp)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"inflation_data_{source}_{timestamp}"
-        processor.save_data(output_df, filename, format='parquet')
-        
         # Save CSV to data_outputs folder with fixed filename (overwrites on each run)
         output_dir = Path(__file__).parent.parent / "data_outputs"
         output_dir.mkdir(parents=True, exist_ok=True)
         csv_path = output_dir / "inflation_data.csv"
         output_df.to_csv(csv_path, index=False)
-        #logger.info(f"CSV saved to {csv_path}")
+        print(f"CSV saved to {csv_path}")
+        
+        # Save processed data to data/processed (for internal use with timestamp) - optional
+        try:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"inflation_data_{source}_{timestamp}"
+            processor.save_data(output_df, filename, format='parquet')
+        except Exception as e:
+            print(f"Warning: Could not save parquet file: {e}", file=sys.stderr)
         
         #logger.info("Pipeline completed successfully")
         
@@ -130,8 +133,10 @@ def main(source: str = "statcan"):
         print("="*70 + "\n")
         
     except Exception as e:
-        #logger.error(f"Pipeline failed: {e}", exc_info=True)
-        raise
+        print(f"\n❌ Pipeline failed with error: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
 
 
 if __name__ == "__main__":
